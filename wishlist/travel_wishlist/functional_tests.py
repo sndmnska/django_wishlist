@@ -4,6 +4,9 @@ from django.test import LiveServerTestCase
 
 class TitleTest(LiveServerTestCase):
 
+# This is utilizing selenium, an admittedly complicated automation tool for django testing. 
+
+    #These remind me very much of oop in Android kotlin.  Setup and teardown is required for selenium. 
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
