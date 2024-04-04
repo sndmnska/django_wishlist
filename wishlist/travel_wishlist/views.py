@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Place
 from .forms import NewPlaceForm
+from django.contrib.auth.decorators import login_required  # import login require decorator
 
+@login_required
 def place_list(request):
     
     if request.method == 'POST':
@@ -21,10 +23,12 @@ def about(request):
     about = 'A website to create a list of places to visit'
     return render(request, 'travel_wishlist/about.html', {'author': author, 'about': about})
 
+@login_required
 def places_visited(request):
     visited = Place.objects.filter(visited=True)
     return render(request, 'travel_wishlist/visited.html', { 'visited': visited })
 
+@login_required
 def place_was_visited(request, place_pk):
     if request.method == 'POST':
         # place = Place.objects.get(pk=place_pk)
