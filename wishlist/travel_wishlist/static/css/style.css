@@ -24,3 +24,19 @@ a.nav-link {
     background-color: green;
     border: darkgreen;
 }
+
+/* Visited Places List */
+
+span.visited-text {
+    display: inline-block;
+    width: 70%;
+}
+
+span.visited-list-place-name {
+    word-wrap: break-word;
+}
+
+.delete {
+    background-color: crimson;
+    border-color: darkred;
+}
