@@ -59,7 +59,7 @@ def place_details(request, place_pk): # place_pk from url.py
         form = TripReviewForm(request.POST, request.FILES, instance=place)
         if form.is_valid():
             form.save()
-            messages.info(request, 'Trip informations updated!')
+            messages.info(request, 'Trip information updated!')
         else:
             messages.error(request, form.errors) # temporary, refine later
         
