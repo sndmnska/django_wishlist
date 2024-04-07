@@ -2,12 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Place(models.Model):
-    user = models.ForeignKey('auth.user', null=False, on_delete=models.CASCADE) # CASCADE == delete all associated places
+    user = models.ForeignKey('auth.user', null=False, on_delete=models.CASCADE) # on_delete, what happens when the user itself is deleted? || CASCADE == delete all associated places
     name = models.CharField(max_length=200) # char limit
     visited = models.BooleanField(default=False)
-    notes = models.TextField(blank=True, null=True)
+    notes = models.TextField(blank=True, null=True) # no limit
     date_visited = models.DateField(blank=True, null=True)
-    photo = models.ImageField(upload_to='user_images', blank=True, null=True)
+    photo = models.ImageField(upload_to='user_images/', blank=True, null=True)
 
     def __str__(self):
         photo_str = self.photo.url if self.photo else 'no photo'
