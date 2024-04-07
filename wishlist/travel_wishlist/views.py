@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Place
-from .forms import NewPlaceForm
+from .forms import NewPlaceForm, TripReviewForm
 from django.contrib.auth.decorators import login_required  # import login require decorator
 from django.http import HttpResponseForbidden
+from django.contrib import messages
 
 @login_required
 def place_list(request):
@@ -44,7 +45,34 @@ def place_was_visited(request, place_pk):
 @login_required
 def place_details(request, place_pk): # place_pk from url.py
     place = get_object_or_404(Place, pk=place_pk)
-    return render(request, 'travel_wishlist/place_detail.html', {'place': place})
+    
+    # does this place bleong to the current user?
+    if place.user != request.user:
+        return HttpResponseForbidden()
+    
+    # Is this a GET request or a POST request?
+
+    # If GET request, show place info and form
+
+    # If POST request, validate form and update. 
+    if request.method == 'POST':
+        form = TripReviewForm(request.POST, request.FILES, instance=place)
+        if form.is_valid():
+            form.save()
+            messages.info(request, 'Trip informations updated!')
+        else:
+            messages.error(request, form.errors) # temporary, refine later
+        
+        return redirect('place_details', place_pk=place_pk)
+    
+    else:
+        # if GET request, show Place info and optional form
+        # If place is visited, show form, if place is not visited, no form. 
+        if place.visited:
+            review_form = TripReviewForm(instance=place)
+            return render(request, 'travel_wishlist/place_detail.html', {'place': place, 'review_form': review_form})
+        else:
+            return render(request, 'travel_wishlist/place_detail.html', {'place': place})
 
 @login_required
 def delete_place(request, place_pk):
