@@ -7,8 +7,8 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sakura.css/css/sakura.css" type="text/css">
         <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
     </head>
-
-    <h1 id="site-header">Where do you want to go?</h1>
+{% comment %} the h1 tag below now has the image, solely for the sake of the cloud platform. Generally frowned upon to put this here. {% endcomment %}
+    <h1 id="site-header" style="background: url('{% static 'img/jtree.jpg' %}')">Where do you want to go?</h1>
     
     {% comment %} This searches for content blocks in visited.html and wishlist.html  {% endcomment %}
     <body>

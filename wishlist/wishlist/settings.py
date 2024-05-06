@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-8mxxp9_+n&ijtj8nyup3+i589*ze*q%!+hm+^-fqxcf6%az85r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -75,13 +75,26 @@ WSGI_APPLICATION = 'wishlist.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+
+# Default settings - will work at App Engine GCP
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'places',
+        'USER': 'traveler',
+        'PASSWORD': os.getenv('TRAVELER_PW'),
+        'HOST': '/cloudsql/wishlist-django-422423:us-central1:wishlist-db-mysql',
+        'PORT':'3306'
     }
 }
 
+# Connect to the same database when code is running on our computer
+# To do that, here we need to connect via the cloud proxy 
+# test if we are running locally? modify database settins for local development
+
+if not os.getenv('GAE_INSTANCE'):
+    # if app is not running at Google Appe Engine [GAE], use local settings
+    DATABASES['default']['HOST'] = '127.0.0.1'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -117,12 +130,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+# STATIC_URL = 'static/' # For local stuff
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Specify a location to copy static files to when running python manage.py collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static')
+
+GS_STATIC_FILE_BUCKET = 'wishlist-django-422423.appspot.com'
+STATIC_URL = f'https://storage.cloud.google.com/{GS_STATIC_FILE_BUCKET}/static/'
 
 # LOGIN_URL = '/admin/' # Automatically send a non-logged in user to the admin login page
 
