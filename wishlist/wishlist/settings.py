@@ -141,7 +141,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static')
 
 GS_STATIC_FILE_BUCKET = 'wishlist-django-422423.appspot.com'
-STATIC_URL = f'https://storage.cloud.google.com/{GS_STATIC_FILE_BUCKET}/static/'
+STATIC_URL = f'https://storage.googleapis.com/{GS_STATIC_FILE_BUCKET}/static/'
 
 # LOGIN_URL = '/admin/' # Automatically send a non-logged in user to the admin login page
 

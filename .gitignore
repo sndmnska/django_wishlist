@@ -9,3 +9,4 @@ app.yaml
 www
 cloud-sql-proxy
 .DS_Store
+travel-credentials.json
