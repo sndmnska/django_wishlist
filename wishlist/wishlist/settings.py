@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 
 from pathlib import Path
 import os
+from google.oauth2 import service_account
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8mxxp9_+n&ijtj8nyup3+i589*ze*q%!+hm+^-fqxcf6%az85r'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -94,7 +95,13 @@ DATABASES = {
 
 if not os.getenv('GAE_INSTANCE'):
     # if app is not running at Google Appe Engine [GAE], use local settings
-    DATABASES['default']['HOST'] = '127.0.0.1'
+    # DATABASES['default']['HOST'] = '127.0.0.1'
+    DATABASES ={
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3')
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -130,7 +137,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-# STATIC_URL = 'static/' # For local stuff
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -139,12 +145,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Specify a location to copy static files to when running python manage.py collectstatic
 STATIC_ROOT = os.path.join(BASE_DIR, 'www', 'static')
-
-GS_STATIC_FILE_BUCKET = 'wishlist-django-422423.appspot.com'
-STATIC_URL = f'https://storage.googleapis.com/{GS_STATIC_FILE_BUCKET}/static/'
-
-# LOGIN_URL = '/admin/' # Automatically send a non-logged in user to the admin login page
-
-MEDIA_URL = '/media/'
-
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+if not os.getenv('GAE_INSTANCE'):
+    STATIC_URL = 'static/' # For local stuff
+    MEDIA_URL = '/media/'
+
+else:
+    GS_STATIC_FILE_BUCKET = 'wishlist-django-422423.appspot.com'
+    STATIC_URL = f'https://storage.googleapis.com/{GS_STATIC_FILE_BUCKET}/static/'
+
+    # LOGIN_URL = '/admin/' # Automatically send a non-logged in user to the admin login page
+
+
+    DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
+    GS_BUCKET_NAME = 'wishlist-user-upload-images-23876123'
+    MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/media/'
+
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_file('travel-credentials.json')
